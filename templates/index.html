@@ -5,21 +5,41 @@
     <script>
         function handleResponse(response) {
             var contentDiv = document.getElementById("content");
-            contentDiv.innerHTML = "";
-            for (var i = 0; i < response.items.length; i++) {
-                var item = response.items[i];
-                // in production code, item.text should have the HTML entities escaped.
-                contentDiv.innerHTML += "<br>" + item.volumeInfo.title;
+            contentDiv.innerHTML = "";  // Clear previous results
+
+            console.log(response); // Log the response to check its structure
+
+            if (response.items) {
+                for (var i = 0; i < response.items.length; i++) {
+                    var item = response.items[i];
+                    contentDiv.innerHTML += `<div class="book-result">
+                                                <h3>${item.volumeInfo.title}</h3>
+                                                <p>${item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author'}</p>
+                                                <p>${item.volumeInfo.description ? item.volumeInfo.description : 'No description available'}</p>
+                                             </div>`;
+                }
+            } else {
+                contentDiv.innerHTML = "<p>No results found.</p>";
             }
         }
 
         function searchBooks() {
             var query = document.getElementById("query").value;
+            console.log(`Searching for: ${query}`); // Log the search query
+
             fetch(`/search?query=${query}`)
                 .then(response => response.json())
-                .then(data => handleResponse(data));
+                .then(data => handleResponse(data))
+                .catch(error => console.error('Error:', error));
         }
     </script>
+    <style>
+        .book-result {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Books API Example</h1>
