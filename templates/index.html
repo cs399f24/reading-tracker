@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Books API Example</title>
     <script>
+        // Define the server's URL, pointing to your Flask backend
+        const server = 'http://EC2-IP:8080';
+
         function handleResponse(response) {
             var contentDiv = document.getElementById("content");
             contentDiv.innerHTML = "";  // Clear previous results
@@ -23,14 +28,18 @@
             }
         }
 
-        function searchBooks() {
-            var query = document.getElementById("query").value;
+        async function searchBooks() {
+            const query = document.getElementById("query").value;
             console.log(`Searching for: ${query}`); // Log the search query
 
-            fetch(`/search?query=${query}`)
-                .then(response => response.json())
-                .then(data => handleResponse(data))
-                .catch(error => console.error('Error:', error));
+            try {
+                const response = await fetch(`${server}/search?query=${query}`);
+                const data = await response.json();
+                handleResponse(data);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while fetching results');
+            }
         }
     </script>
     <style>
