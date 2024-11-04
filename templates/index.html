@@ -6,7 +6,7 @@
     <title>Books API Example</title>
     <script>
         // Define the server's URL, pointing to your Flask backend
-        const server = 'http://<EC2-IP>:8080';  // Update with your Flask server URL
+        const server = 'http://<EC2-IP>::8080';  // Update with your Flask server URL
 
         function handleResponse(response) {
             var contentDiv = document.getElementById("content");
@@ -46,11 +46,17 @@
         }
 
         async function saveBook(title, author, pageCount, isbn) {
+            // Ensure ISBN is available before proceeding
+            if (isbn === 'No ISBN available') {
+                alert('Cannot save book without a valid ISBN.');
+                return;
+            }
+
             const bookData = {
+                BookID: isbn,
                 Title: title,
                 Author: author,
-                PageCount: pageCount,
-                ISBN: isbn,
+                PageCount: pageCount
             };
 
             try {
@@ -88,7 +94,7 @@
                                     <td>${book.Title}</td>
                                     <td>${book.Author}</td>
                                     <td>${book.PageCount}</td>
-                                    <td>${book.ISBN}</td>
+                                    <td>${book.BookID}</td>
                                    </tr>`;
                     });
                     table += "</table>";
