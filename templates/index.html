@@ -6,7 +6,7 @@
     <title>Books API Example</title>
     <script>
         // Define the server's URL, pointing to your Flask backend
-        const server = 'http://EC2-IP:8080';
+        const server = 'http://<EC2-IP>:8080';  // Update with your Flask server URL
 
         function handleResponse(response) {
             var contentDiv = document.getElementById("content");
@@ -19,8 +19,11 @@
                     var item = response.items[i];
                     contentDiv.innerHTML += `<div class="book-result">
                                                 <h3>${item.volumeInfo.title}</h3>
-                                                <p>${item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author'}</p>
-                                                <p>${item.volumeInfo.description ? item.volumeInfo.description : 'No description available'}</p>
+                                                <p><strong>Author(s):</strong> ${item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author'}</p>
+                                                <p><strong>Page Count:</strong> ${item.volumeInfo.pageCount ? item.volumeInfo.pageCount : 'No page count available'}</p>
+                                                <p><strong>Description:</strong> ${item.volumeInfo.description ? item.volumeInfo.description : 'No description available'}</p>
+                                                <p><strong>ISBN:</strong> ${item.volumeInfo.industryIdentifiers ? item.volumeInfo.industryIdentifiers[0].identifier : 'No ISBN available'}</p>
+                                                <button onclick="saveBook('${item.volumeInfo.title}', '${item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author'}', ${item.volumeInfo.pageCount}, '${item.volumeInfo.industryIdentifiers ? item.volumeInfo.industryIdentifiers[0].identifier : 'No ISBN available'}')">Save Book</button>
                                              </div>`;
                 }
             } else {
@@ -41,6 +44,63 @@
                 alert('An error occurred while fetching results');
             }
         }
+
+        async function saveBook(title, author, pageCount, isbn) {
+            const bookData = {
+                Title: title,
+                Author: author,
+                PageCount: pageCount,
+                ISBN: isbn,
+            };
+
+            try {
+                const response = await fetch(`${server}/save_book`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bookData),
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);  // Show success message
+                } else {
+                    alert('Failed to save book: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error saving book:', error);
+                alert('An error occurred while saving the book');
+            }
+        }
+
+        async function loadShelvedBooks() {
+            try {
+                const response = await fetch(`${server}/shelved_books`);
+                const books = await response.json();
+                const shelvedBooksDiv = document.getElementById("saved-books");
+                shelvedBooksDiv.innerHTML = "";  // Clear previous shelved books
+
+                if (books.length > 0) {
+                    let table = `<table border="1" style="width: 100%; text-align: left;"><tr><th>Title</th><th>Author</th><th>Page Count</th><th>ISBN</th></tr>`;
+                    books.forEach(book => {
+                        table += `<tr>
+                                    <td>${book.Title}</td>
+                                    <td>${book.Author}</td>
+                                    <td>${book.PageCount}</td>
+                                    <td>${book.ISBN}</td>
+                                   </tr>`;
+                    });
+                    table += "</table>";
+                    shelvedBooksDiv.innerHTML = table;  // Insert table into the div
+                } else {
+                    shelvedBooksDiv.innerHTML = "<p>No shelved books found.</p>";
+                }
+            } catch (error) {
+                console.error('Error loading shelved books:', error);
+                alert('An error occurred while loading shelved books');
+            }
+        }
     </script>
     <style>
         .book-result {
@@ -55,5 +115,10 @@
     <input type="text" id="query" placeholder="Enter book name" />
     <button onclick="searchBooks()">Search</button>
     <div id="content"></div>
+
+    <h2>Shelved Books</h2>
+    <button onclick="loadShelvedBooks()">Load Shelved Books</button>
+    <div id="saved-books"></div>
 </body>
 </html>
+
