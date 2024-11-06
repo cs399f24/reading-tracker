@@ -5,6 +5,8 @@ import os
 from flask_cors import CORS
 import json
 import boto3
+from flasgger import Swagger
+
 
 # Import the DynamoDBShelf class
 from dynamo_shelf import DynamoDBShelf  # Assuming your class is saved in dynamo_shelf.py
