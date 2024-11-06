@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: Bookshelf API
+  description: API for searching books using Google Books API, saving books to DynamoDB, and retrieving shelved books.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local server
+tags:
+  - name: Book Search
+    description: Search for books using the Google Books API
+  - name: Book Shelf
+    description: Save and retrieve shelved books from DynamoDB
+
+paths:
+  /search:
+    get:
+      tags:
+        - Book Search
+      summary: Search for books
+      description: Searches for books based on a query using the Google Books API.
+      operationId: searchBooks
+      parameters:
+        - name: query
+          in: query
+          description: Search term for querying books
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response with book data
+          content:
+            application/json:
+              schema:
+                type: object
+                description: JSON data from the Google Books API
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+  /save_book:
+    post:
+      tags:
+        - Book Shelf
+      summary: Save a book to DynamoDB
+      description: Saves a book's details to the DynamoDB table if it has a valid ISBN.
+      operationId: saveBook
+      requestBody:
+        description: Book details to be saved
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Title:
+                  type: string
+                  description: Title of the book
+                Author:
+                  type: string
+                  description: Author of the book
+                PageCount:
+                  type: integer
+                  description: Number of pages in the book
+                BookID:
+                  type: string
+                  description: ISBN of the book
+              required:
+                - Title
+                - Author
+                - PageCount
+                - BookID
+      responses:
+        '201':
+          description: Book saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: ISBN missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Cannot save book without a valid ISBN.
+        '500':
+          description: Server error
+
+  /shelved_books:
+    get:
+      tags:
+        - Book Shelf
+      summary: Retrieve shelved books
+      description: Retrieves all books saved in the DynamoDB bookshelf.
+      operationId: getShelvedBooks
+      responses:
+        '200':
+          description: Successful response with shelved books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Title:
+                      type: string
+                    Author:
+                      type: string
+                    PageCount:
+                      type: integer
+                    BookID:
+                      type: string
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
