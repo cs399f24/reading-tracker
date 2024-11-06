@@ -12,6 +12,8 @@ from flasgger import Swagger
 from dynamo_shelf import DynamoDBShelf  # Assuming your class is saved in dynamo_shelf.py
 
 app = Flask(__name__)
+swagger = Swagger(app, template_file='openapi.yaml')
+
 
 # Load environment variables from .env file
 load_dotenv()
