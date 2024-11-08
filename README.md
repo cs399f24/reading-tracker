@@ -95,6 +95,8 @@ To allow the Reading Tracker application to upload and manage files, configure a
 
 1. In the S3 Dashboard, open the **reading-tracker-assets** bucket and go to the **Permissions** tab.
 2. Scroll down to **Bucket policy** and add the following JSON policy:
+
+```
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -106,6 +108,9 @@ To allow the Reading Tracker application to upload and manage files, configure a
     }
   ]
 }
+```
+
+
 
 
 EC2 User Data Script
