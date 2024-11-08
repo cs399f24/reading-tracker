@@ -67,6 +67,47 @@ Your application will automatically create the bookshelf table when the dynamo_s
 }
 ```
 
+1. Sign in to the [AWS Management Console](https://aws.amazon.com/console/).
+2. Open the **S3** service by searching for "S3" in the top search bar.
+3. In the S3 Dashboard, click on **Create bucket**.
+4. Enter the following settings:
+   - **Bucket Name**: `reading-tracker-assets` (you can choose a unique name if this is taken).
+   - **AWS Region**: Choose a region close to your users or application.
+
+5. **Bucket Settings for Object Ownership**:
+   - Select **ACLs disabled** for best security practices.
+   - Choose **Bucket owner enforced** to ensure full control over uploaded objects.
+
+6. **Block Public Access Settings**:
+   - **Block all public access** is enabled by default. Keep this enabled unless you specifically need public access.
+
+7. **Additional Settings**:
+   - **Versioning**: (Optional) Enable if you want to keep multiple versions of user-uploaded files.
+   - **Encryption**: (Recommended) Enable server-side encryption to secure data at rest.
+
+8. Click **Create bucket**.
+
+### Step 2: Set Up Access Policies
+
+To allow the Reading Tracker application to upload and manage files, configure an access policy for the bucket.
+
+#### Creating a Bucket Policy
+
+1. In the S3 Dashboard, open the **reading-tracker-assets** bucket and go to the **Permissions** tab.
+2. Scroll down to **Bucket policy** and add the following JSON policy:
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::your-bucket-name/*"
+    }
+  ]
+}
+
+
 EC2 User Data Script
 Your userdata.sh script should look similar to this:
 ```
