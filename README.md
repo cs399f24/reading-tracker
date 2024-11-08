@@ -6,6 +6,26 @@
 
 This project implements a web application where users can search for books using the Google Books API and store selected books in a DynamoDB table. The application serves a frontend hosted in an S3 bucket and a Flask backend running on an EC2 instance.
 
+## How to get Google Books API
+1. Create a Google Cloud Project
+Go to the Google Cloud Console.
+Click on Select a Project at the top, then click on New Project.
+Give your project a name (e.g., GoogleBooksAPIProject) and click Create.
+2. Enable the Google Books API
+Once your project is created, go to the API Library.
+Search for Google Books API.
+Click on it, then click Enable.
+3. Generate an API Key
+Go to the Credentials page.
+Click + Create Credentials and select API Key.
+Your new API key will be generated. Copy this key, as you'll need it to make requests.
+4. Set Up API Restrictions (Optional but Recommended)
+To prevent unauthorized use of your API key, you can restrict it:
+Click on the API key you just created.
+Under Application restrictions, you can limit it to certain HTTP referrers (for web apps) or IP addresses (for server-side apps).
+Under API restrictions, you can limit it to only the Google Books API.
+
+
 ## Launch the API
 
 To launch the Flask API, ensure that your EC2 instance has a security group that allows HTTP (port 8080) and SSH (port 22) access. You can verify your security groups using the AWS CLI:
