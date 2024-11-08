@@ -15,7 +15,7 @@ aws ec2 describe-security-groups
 ```
 To create and launch the EC2 instance with the appropriate IAM role and user data for installing the necessary dependencies and running your application, use the following command:
 ```
-aws ec2 run-instances --image-id ami-06b21ccaeff8cd686 --instance-type t2.micro --key-name vockey --security-groups httpssh --user-data file://userdata.sh --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=book_shelf_api}]' --iam-instance-profile Name=LabInstanceProfile
+aws ec2 run-instances --image-id ami-06b21ccaeff8cd686 --instance-type t2.micro --key-name vockey --security-groups httpssh readingtracker-http --user-data file://userdata.sh --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=readingtrackerdynamo}]' --iam-instance-profile Name=LabInstanceProfile
 ```
 
 Changes to the Server
