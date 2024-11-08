@@ -25,6 +25,32 @@ Click on the API key you just created.
 Under Application restrictions, you can limit it to certain HTTP referrers (for web apps) or IP addresses (for server-side apps).
 Under API restrictions, you can limit it to only the Google Books API.
 
+## AWS Secrets Setup
+Step-by-Step Guide to Create the Secret
+Log in to AWS Management Console:
+
+Go to AWS Management Console.
+Sign in using your credentials.
+Navigate to Secrets Manager:
+
+Type Secrets Manager in the search bar and click on it.
+Create a New Secret:
+
+Click on Store a new secret.
+Select Other type of secret.
+Add the Key-Value Pair:
+
+In the Key field, enter: googlebooks
+In the Value field, enter your Google Books API Key (e.g., AIzaSyDXXXXXXX...).
+Set the Secret Name:
+
+Click Next.
+Enter Secret Name as reading_test_key.
+
+Review and Store:
+
+Review the details to ensure everything is correct.
+Click Store.
 
 ## Launch the API
 
